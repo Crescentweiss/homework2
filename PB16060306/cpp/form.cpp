@@ -2,6 +2,8 @@
 #include "ui_form.h"
 #include "setting.h"
 #include "ui_setting.h"
+#include "form.h"
+#include "ui_form.h"
 #include <QPixmap>
 #include <QMovie>
 #include <QDebug>
@@ -10,17 +12,15 @@
 #include <QStringList>
 #include <QDebug>
 #include <QDateTime>
-#include<QApplication>
-#include<dll.h>
-#include<QLibrary>
+#include <QApplication>
+#include <dll.h>
+#include <QLibrary>
 
-typedef void (*Fun1)();
-typedef bool (*Fun2)(const char*);
 
 using namespace std;
 
-static int i=1;
-static int j=0;
+//char i='1';
+//static int j=0;
 int flag=0;
 QString ques[1000],ans[1000];
 static int m=0,n=0,l=0,max=0,score=0;
@@ -29,6 +29,15 @@ QFile hi("d:\\history.txt");
 QFile ti("d:\\produce_q.txt");
 QFile da("d:\\produce_a.txt");
 QFile sc("d:\\score.txt");
+
+typedef void(*Fun)(int,int,int,int,int);
+typedef void(*Fun1)();
+typedef bool(*Fun2)(int,string,string);
+typedef void (*Fun3)(bool, bool, bool, bool, bool);
+typedef void (*Fun4)(bool);
+typedef bool (*Fun5)(const char*);
+typedef bool (*Fun6)(const char*);
+typedef void (*Fun7)(int);
 
 
 Form::Form(QWidget *parent) :
@@ -55,28 +64,21 @@ Form::~Form()
 
 void Form::on_pushButton_5_clicked()
 {
-   /*
     QLibrary mylib("D:/XDATA/QTTTTTTTT/build-test-Desktop_Qt_5_4_0_MinGW_32bit-Debug/debug/Core.dll");
+    const char* exp="D:/produce_q.txt";
+    const char* ans1="D:/produce_a.txt";
     if(mylib.load())
     {
-        QMessageBox::information(this, "dll is loaded", "dll is loaded");
-        Fun1 opens=(Fun1)mylib.resolve("generate");
-        if(opens)
-        {
-             QMessageBox::information(this, "generate is loaded", "generate is loaded");
-             opens();
-        }
+        //QMessageBox::information(this,tr("afasfa"),tr("传统美德"));
+        Fun1 generate=(Fun1)mylib.resolve("?generate@@YAXXZ");
+        Fun5 exp_to_file=(Fun5)mylib.resolve("?exp_to_file@@YA_NPBD@Z");
+        Fun6 ans_to_file=(Fun6)mylib.resolve("?ans_to_file@@YA_NPBD@Z");
 
-        Fun2 putting=(Fun2)mylib.resolve("exp_to_File");
-        if(putting)
-        {
-            QMessageBox::information(this, "exp is loaded", "exp is loaded");
-            putting("d:\\produce_q.txt");
-        }
+        generate();
+        exp_to_file(exp);
+        ans_to_file(ans1);
     }
-    */
-    generate();
-    exp_to_file("d:\\produce_q.txt");
+
     m=0;n=0;l=0;score=0;
     if(!da.open(QIODevice::ReadOnly |QIODevice::Text))
          qDebug()<<da.errorString();
@@ -107,7 +109,7 @@ void Form::on_pushButton_5_clicked()
         qDebug()<<sc.errorString();
    ui->label_3->setText(ques[0]);
    timerId = startTimer(1000);   // 1s
-      ui->stackedWidget->setCurrentIndex(1); //翻页
+   ui->stackedWidget->setCurrentIndex(1); //翻页
 }
 
 void Form::on_pushButton_4_clicked()
@@ -202,3 +204,4 @@ void Form::timerEvent(QTimerEvent *event)
 
     }
 }
+
